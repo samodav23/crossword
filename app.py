@@ -45,10 +45,12 @@ def draw_crossword():
     st.title("Crucișeul Interactiv")
     st.write("Completează grila pentru a descoperi replica ascunsă!")
 
-    # Create a form for the crossword
+    # Display the crossword grid interactively
+    correct = True
     form = st.form(key="crossword_form")
     user_grid = []
 
+    st.write("### Completează grila")
     for row_idx, row in enumerate(grid):
         cols = form.columns(len(row))
         user_row = []
@@ -57,14 +59,14 @@ def draw_crossword():
                 user_input = cols[col_idx].text_input("", key=f"cell_{row_idx}_{col_idx}", max_chars=1).upper()
                 user_row.append(user_input)
             else:
-                cols[col_idx].text(cell if row_idx == 0 or col_idx == 5 else "")
+                cols[col_idx].text_input("", value=cell, disabled=True, key=f"fixed_{row_idx}_{col_idx}")
                 user_row.append(cell)
         user_grid.append(user_row)
 
     submitted = form.form_submit_button("Verifică răspunsurile")
 
     if submitted:
-        correct = True
+        # Validate the answers
         for row_idx, row in enumerate(grid):
             for col_idx, cell in enumerate(row):
                 if cell != "" and cell != user_grid[row_idx][col_idx]:
